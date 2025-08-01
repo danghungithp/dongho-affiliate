@@ -2,6 +2,75 @@ import express from 'express';
 import { getDb, initDb } from '../db/sqlite.js';
 const router = express.Router();
 
+// Basic auth middleware
+function basicAuth(req, res, next) {
+  const auth = req.headers.authorization;
+  if (!auth || !auth.startsWith('Basic ')) return res.status(401).json({ error: 'Unauthorized' });
+  const [user, pass] = Buffer.from(auth.split(' ')[1], 'base64').toString().split(':');
+  if (user !== 'admin' || pass !== 'Danghungit@85') return res.status(401).json({ error: 'Unauthorized' });
+  next();
+}
+// POST /products (add new)
+router.post('/', basicAuth, async (req, res) => {
+  const db = await getDb();
+  const { name, brand, price, imageUrl, rating, style, isHotDeal, isNew, isBestSeller } = req.body;
+  if (!name || !price || !imageUrl) return res.status(400).json({ error: 'Missing required fields' });
+  try {
+    const result = await db.run(
+      `INSERT INTO products (name, brand, price, imageUrl, rating, style, isHotDeal, isNew, isBestSeller)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)` ,
+      name,
+      brand || '',
+      price,
+      imageUrl,
+      rating || 0,
+      style || '',
+      isHotDeal ? 1 : 0,
+      isNew ? 1 : 0,
+      isBestSeller ? 1 : 0
+    );
+    res.json({ id: result.lastID });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// PUT /products/:id (edit)
+router.put('/:id', basicAuth, async (req, res) => {
+  const db = await getDb();
+  const { name, brand, price, imageUrl, rating, style, isHotDeal, isNew, isBestSeller } = req.body;
+  if (!name || !price || !imageUrl) return res.status(400).json({ error: 'Missing required fields' });
+  try {
+    await db.run(
+      `UPDATE products SET name=?, brand=?, price=?, imageUrl=?, rating=?, style=?, isHotDeal=?, isNew=?, isBestSeller=? WHERE id=?`,
+      name,
+      brand || '',
+      price,
+      imageUrl,
+      rating || 0,
+      style || '',
+      isHotDeal ? 1 : 0,
+      isNew ? 1 : 0,
+      isBestSeller ? 1 : 0,
+      req.params.id
+    );
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// DELETE /products/:id (delete)
+router.delete('/:id', basicAuth, async (req, res) => {
+  const db = await getDb();
+  try {
+    await db.run('DELETE FROM products WHERE id = ?', req.params.id);
+    res.json({ success: true });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 // GET /products
 router.get('/', async (req, res) => {
   const db = await getDb();

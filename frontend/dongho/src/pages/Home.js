@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { motion } from 'framer-motion';
+import Seo from '../components/Seo';
+import { Link } from 'react-router-dom';
 
 const TAGS = [
   { key: 'isHotDeal', label: 'Hot deal', color: 'bg-red-500' },
@@ -23,9 +25,11 @@ function TagBadges({ product }) {
 function ProductCard({ product, onGetLink }) {
   return (
     <motion.div className="bg-white rounded-xl shadow hover:shadow-lg p-4 flex flex-col" whileHover={{ scale: 1.03 }}>
-      <img src={product.imageUrl} alt={product.name} className="h-40 w-full object-contain mb-2 rounded" />
+      <Link to={`/product/${product.id}`}>
+        <img src={product.imageUrl} alt={product.name} className="h-40 w-full object-contain mb-2 rounded" />
+      </Link>
       <TagBadges product={product} />
-      <div className="font-semibold text-lg mb-1">{product.name}</div>
+      <Link to={`/product/${product.id}`} className="font-semibold text-lg mb-1 hover:underline block">{product.name}</Link>
       <div className="text-gray-500 text-sm mb-1">{product.brand} • {product.style}</div>
       <div className="flex items-center gap-2 mb-2">
         <span className="text-blue-600 font-bold text-xl">{product.price?.toLocaleString()}₫</span>
@@ -80,38 +84,46 @@ export default function Home() {
   const totalPages = Math.ceil(total / pageSize);
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4 text-center">Sản phẩm đồng hồ nam</h1>
-      <div className="flex flex-wrap gap-4 mb-6 justify-center">
-        <select className="border rounded px-3 py-2" value={filters.brand} onChange={e => setFilters(f => ({ ...f, brand: e.target.value }))}>
-          <option value="">Tất cả hãng</option>
-          {brands.map(b => <option key={b} value={b}>{b}</option>)}
-        </select>
-        <select className="border rounded px-3 py-2" value={filters.style} onChange={e => setFilters(f => ({ ...f, style: e.target.value }))}>
-          <option value="">Tất cả kiểu</option>
-          {styles.map(s => <option key={s} value={s}>{s}</option>)}
-        </select>
-        <input type="number" className="border rounded px-3 py-2 w-32" placeholder="Giá từ" value={filters.minPrice} onChange={e => setFilters(f => ({ ...f, minPrice: e.target.value }))} />
-        <input type="number" className="border rounded px-3 py-2 w-32" placeholder="Đến" value={filters.maxPrice} onChange={e => setFilters(f => ({ ...f, maxPrice: e.target.value }))} />
-      </div>
-      {loading ? <div className="text-center text-gray-500">Đang tải...</div> : (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map(product => (
-              <ProductCard key={product.id} product={product} onGetLink={handleGetLink} />
-            ))}
-          </div>
-          {totalPages > 1 && (
-            <div className="flex justify-center mt-8 gap-2">
-              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1 rounded border bg-white hover:bg-gray-100 disabled:opacity-50">Trước</button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
-                <button key={p} onClick={() => setPage(p)} className={`px-3 py-1 rounded border ${p === page ? 'bg-blue-600 text-white' : 'bg-white hover:bg-gray-100'}`}>{p}</button>
+    <>
+      <Seo
+        title="Đồng hồ nam - Sản phẩm, giá tốt, nhiều hãng nổi tiếng"
+        description="Website tiếp thị liên kết đồng hồ nam, nhập sản phẩm từ Excel, lọc và xem sản phẩm, lấy link Shopee, giá tốt, nhiều hãng nổi tiếng."
+        image={products[0]?.imageUrl}
+        url={typeof window !== 'undefined' ? window.location.href : ''}
+      />
+      <div>
+        <h1 className="text-2xl font-bold mb-4 text-center">Sản phẩm đồng hồ nam</h1>
+        <div className="flex flex-wrap gap-4 mb-6 justify-center">
+          <select className="border rounded px-3 py-2" value={filters.brand} onChange={e => setFilters(f => ({ ...f, brand: e.target.value }))}>
+            <option value="">Tất cả hãng</option>
+            {brands.map(b => <option key={b} value={b}>{b}</option>)}
+          </select>
+          <select className="border rounded px-3 py-2" value={filters.style} onChange={e => setFilters(f => ({ ...f, style: e.target.value }))}>
+            <option value="">Tất cả kiểu</option>
+            {styles.map(s => <option key={s} value={s}>{s}</option>)}
+          </select>
+          <input type="number" className="border rounded px-3 py-2 w-32" placeholder="Giá từ" value={filters.minPrice} onChange={e => setFilters(f => ({ ...f, minPrice: e.target.value }))} />
+          <input type="number" className="border rounded px-3 py-2 w-32" placeholder="Đến" value={filters.maxPrice} onChange={e => setFilters(f => ({ ...f, maxPrice: e.target.value }))} />
+        </div>
+        {loading ? <div className="text-center text-gray-500">Đang tải...</div> : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {products.map(product => (
+                <ProductCard key={product.id} product={product} onGetLink={handleGetLink} />
               ))}
-              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="px-3 py-1 rounded border bg-white hover:bg-gray-100 disabled:opacity-50">Sau</button>
             </div>
-          )}
-        </>
-      )}
-    </div>
+            {totalPages > 1 && (
+              <div className="flex justify-center mt-8 gap-2">
+                <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className="px-3 py-1 rounded border bg-white hover:bg-gray-100 disabled:opacity-50">Trước</button>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                  <button key={p} onClick={() => setPage(p)} className={`px-3 py-1 rounded border ${p === page ? 'bg-blue-600 text-white' : 'bg-white hover:bg-gray-100'}`}>{p}</button>
+                ))}
+                <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className="px-3 py-1 rounded border bg-white hover:bg-gray-100 disabled:opacity-50">Sau</button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </>
   );
 }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import ImageUpload from '../components/ImageUpload';
 import Toast from '../components/Toast';
+import Seo from '../components/Seo';
 
 export default function AddProduct() {
   const [form, setForm] = useState({
@@ -30,9 +31,21 @@ export default function AddProduct() {
   }
 
   return (
-    <div className="max-w-lg mx-auto bg-white shadow rounded-lg p-8 mt-8">
-      <h1 className="text-2xl font-bold mb-4 text-center">Thêm sản phẩm mới</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <div>
+      <Seo
+        title="Thêm sản phẩm mới - Đồng hồ nam Affiliate"
+        description="Trang thêm sản phẩm mới cho website đồng hồ nam, nhập thông tin sản phẩm, upload ảnh, đánh dấu hot deal, mới về, bán chạy."
+        url={typeof window !== 'undefined' ? window.location.href : ''}
+      />
+      <div className="max-w-lg mx-auto bg-white shadow rounded-lg p-8 mt-8">
+        <h1 className="text-2xl font-bold mb-4 text-center">Thêm sản phẩm mới</h1>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* ...existing code... */}
+        </form>
+        <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: 'success' })} />
+      </div>
+    </div>
+  );
         <input className="border rounded px-3 py-2" placeholder="Tên sản phẩm" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />
         <input className="border rounded px-3 py-2" placeholder="Hãng" value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))} />
         <input className="border rounded px-3 py-2" placeholder="Giá" type="number" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} required />

@@ -6,6 +6,8 @@ import Home from './pages/Home';
 import Import from './pages/Import';
 import Login from './pages/Login';
 import AddProduct from './pages/AddProduct';
+import ProductManager from './pages/ProductManager';
+import ProductDetail from './pages/ProductDetail';
 
 function Layout({ children }) {
   return (
@@ -17,6 +19,7 @@ function Layout({ children }) {
             <NavLink to="/" className={({isActive}) => isActive ? 'text-blue-600 font-semibold' : 'text-gray-700 hover:text-blue-600'}>Trang chủ</NavLink>
             <NavLink to="/import" className={({isActive}) => isActive ? 'text-blue-600 font-semibold' : 'text-gray-700 hover:text-blue-600'}>Nhập Excel</NavLink>
             <NavLink to="/add-product" className={({isActive}) => isActive ? 'text-blue-600 font-semibold' : 'text-gray-700 hover:text-blue-600'}>Thêm sản phẩm</NavLink>
+            <NavLink to="/product-manager" className={({isActive}) => isActive ? 'text-blue-600 font-semibold' : 'text-gray-700 hover:text-blue-600'}>Quản lý sản phẩm</NavLink>
             <NavLink to="/about" className={({isActive}) => isActive ? 'text-blue-600 font-semibold' : 'text-gray-700 hover:text-blue-600'}>Giới thiệu</NavLink>
             <NavLink to="/contact" className={({isActive}) => isActive ? 'text-blue-600 font-semibold' : 'text-gray-700 hover:text-blue-600'}>Liên hệ</NavLink>
           </div>
@@ -57,6 +60,8 @@ function App() {
           <Route path="/import" element={loggedIn ? <Import /> : <Navigate to="/login" />} />
           <Route path="/login" element={loggedIn ? <Navigate to="/import" /> : <Login onLogin={handleLogin} />} />
           <Route path="/add-product" element={loggedIn ? <AddProduct /> : <Navigate to="/login" />} />
+          <Route path="/product-manager" element={loggedIn ? <ProductManager /> : <Navigate to="/login" />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
         </Routes>
