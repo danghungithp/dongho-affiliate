@@ -29,6 +29,33 @@ router.post('/', basicAuth, upload.single('file'), async (req, res) => {
   } else {
     return res.status(400).json({ error: 'No file or data uploaded' });
   }
+
+  // Vietnamese to English field mapping
+  const fieldMap = {
+    'Tên sản phẩm': 'name',
+    'Giá': 'price',
+    'Tên cửa hàng': 'brand',
+    'Link sản phẩm': 'imageUrl',
+    'Đánh giá': 'rating',
+    'Phong cách': 'style',
+    'Hot Deal': 'isHotDeal',
+    'Mới về': 'isNew',
+    'Bán chạy': 'isBestSeller',
+    // Add more mappings as needed
+  };
+
+  // Map all rows
+  rows = rows.map((row) => {
+    const mapped = {};
+    for (const key in row) {
+      if (fieldMap[key]) {
+        mapped[fieldMap[key]] = row[key];
+      } else {
+        mapped[key] = row[key]; // fallback for unmapped fields
+      }
+    }
+    return mapped;
+  });
   const db = await getDb();
   let imported = 0, skipped = 0, errors = [];
   for (const row of rows) {
