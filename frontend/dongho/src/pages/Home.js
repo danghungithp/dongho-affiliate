@@ -59,21 +59,21 @@ export default function Home() {
   async function fetchProducts() {
     setLoading(true);
     const params = { ...filters, page, pageSize };
-    const res = await axios.get('/products', { baseURL: process.env.REACT_APP_API || 'http://localhost:5000', params });
+    const res = await axios.get('/products', { baseURL: process.env.REACT_APP_API_URL, params });
     setProducts(res.data.products);
     setTotal(res.data.total);
     setLoading(false);
     // Extract unique brands/styles for filters (from all products, not just current page)
     if (page === 1) {
       // Fetch all for filter options
-      const allRes = await axios.get('/products', { baseURL: process.env.REACT_APP_API || 'http://localhost:5000' });
+      const allRes = await axios.get('/products', { baseURL: process.env.REACT_APP_API_URL });
       setBrands([...new Set(allRes.data.products.map(p => p.brand).filter(Boolean))]);
       setStyles([...new Set(allRes.data.products.map(p => p.style).filter(Boolean))]);
     }
   }
 
   async function handleGetLink(id) {
-    const res = await axios.get(`/affiliate/${id}`, { baseURL: process.env.REACT_APP_API || 'http://localhost:5000' });
+    const res = await axios.get(`/affiliate/${id}`, { baseURL: process.env.REACT_APP_API_URL });
     window.open(res.data.link, '_blank');
   }
 

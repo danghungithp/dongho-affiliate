@@ -15,7 +15,7 @@ export default function ImageUpload({ value, onChange }) {
     formData.append('image', file);
     try {
       const res = await axios.post('/upload-image', formData, {
-        baseURL: process.env.REACT_APP_API || 'http://localhost:5000',
+        baseURL: process.env.REACT_APP_API_URL,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       onChange(res.data.url);

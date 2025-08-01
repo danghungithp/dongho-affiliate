@@ -15,7 +15,7 @@ export default function AddProduct() {
     setLoading(true);
     try {
       await axios.post('/products/import', [{ ...form }], {
-        baseURL: process.env.REACT_APP_API || 'http://localhost:5000',
+        baseURL: process.env.REACT_APP_API_URL,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Basic ' + btoa('admin:Danghungit@85')

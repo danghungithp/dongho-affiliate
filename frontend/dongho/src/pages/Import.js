@@ -18,7 +18,7 @@ export default function Import() {
     try {
       const basicAuth = 'Basic ' + btoa('admin:Danghungit@85');
       const res = await axios.post('/products/import', formData, {
-        baseURL: process.env.REACT_APP_API || 'http://localhost:5000',
+        baseURL: process.env.REACT_APP_API_URL,
         headers: {
           'Content-Type': 'multipart/form-data',
           'Authorization': basicAuth
