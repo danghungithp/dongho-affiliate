@@ -40,26 +40,21 @@ export default function AddProduct() {
       <div className="max-w-lg mx-auto bg-white shadow rounded-lg p-8 mt-8">
         <h1 className="text-2xl font-bold mb-4 text-center">Thêm sản phẩm mới</h1>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {/* ...existing code... */}
+          <input className="border rounded px-3 py-2" placeholder="Tên sản phẩm" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />
+          <input className="border rounded px-3 py-2" placeholder="Hãng" value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))} />
+          <input className="border rounded px-3 py-2" placeholder="Giá" type="number" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} required />
+          <ImageUpload value={form.imageUrl} onChange={url => setForm(f => ({ ...f, imageUrl: url }))} />
+          <input className="border rounded px-3 py-2" placeholder="Đánh giá (1-5)" type="number" min="1" max="5" value={form.rating} onChange={e => setForm(f => ({ ...f, rating: e.target.value }))} />
+          <input className="border rounded px-3 py-2" placeholder="Kiểu" value={form.style} onChange={e => setForm(f => ({ ...f, style: e.target.value }))} />
+          <div className="flex gap-4">
+            <label className="flex items-center gap-1"><input type="checkbox" checked={form.isHotDeal} onChange={e => setForm(f => ({ ...f, isHotDeal: e.target.checked }))} />Hot deal</label>
+            <label className="flex items-center gap-1"><input type="checkbox" checked={form.isNew} onChange={e => setForm(f => ({ ...f, isNew: e.target.checked }))} />New</label>
+            <label className="flex items-center gap-1"><input type="checkbox" checked={form.isBestSeller} onChange={e => setForm(f => ({ ...f, isBestSeller: e.target.checked }))} />Bestseller</label>
+          </div>
+          <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded" disabled={loading}>{loading ? 'Đang thêm...' : 'Thêm sản phẩm'}</button>
         </form>
         <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: 'success' })} />
       </div>
-    </div>
-  );
-        <input className="border rounded px-3 py-2" placeholder="Tên sản phẩm" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} required />
-        <input className="border rounded px-3 py-2" placeholder="Hãng" value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))} />
-        <input className="border rounded px-3 py-2" placeholder="Giá" type="number" value={form.price} onChange={e => setForm(f => ({ ...f, price: e.target.value }))} required />
-        <ImageUpload value={form.imageUrl} onChange={url => setForm(f => ({ ...f, imageUrl: url }))} />
-        <input className="border rounded px-3 py-2" placeholder="Đánh giá (1-5)" type="number" min="1" max="5" value={form.rating} onChange={e => setForm(f => ({ ...f, rating: e.target.value }))} />
-        <input className="border rounded px-3 py-2" placeholder="Kiểu" value={form.style} onChange={e => setForm(f => ({ ...f, style: e.target.value }))} />
-        <div className="flex gap-4">
-          <label className="flex items-center gap-1"><input type="checkbox" checked={form.isHotDeal} onChange={e => setForm(f => ({ ...f, isHotDeal: e.target.checked }))} />Hot deal</label>
-          <label className="flex items-center gap-1"><input type="checkbox" checked={form.isNew} onChange={e => setForm(f => ({ ...f, isNew: e.target.checked }))} />New</label>
-          <label className="flex items-center gap-1"><input type="checkbox" checked={form.isBestSeller} onChange={e => setForm(f => ({ ...f, isBestSeller: e.target.checked }))} />Bestseller</label>
-        </div>
-        <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded" disabled={loading}>{loading ? 'Đang thêm...' : 'Thêm sản phẩm'}</button>
-      </form>
-      <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: 'success' })} />
     </div>
   );
 }
